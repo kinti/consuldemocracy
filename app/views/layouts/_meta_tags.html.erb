@@ -1,5 +1,56 @@
-<meta name="description"
-      content="<%= content_for?(:meta_description) ? yield(:meta_description) : setting["meta_description"] %>" />
+<%
+  # Título dinámico (con fallback)
+  page_title =
+    if content_for?(:meta_title)
+      yield(:meta_title)
+    else
+      setting["org_name"].presence || "Consul Democracy"
+    end
 
-<meta name="keywords"
-      content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : setting["meta_keywords"] %>" />
+  # Descripción dinámica (con fallback)
+  page_description =
+    if content_for?(:meta_description)
+      yield(:meta_description)
+    else
+      setting["meta_description"].presence || "Plataforma de participación."
+    end
+
+  # Keywords (no importantes para SEO actual, pero Consul las usa)
+  page_keywords =
+    if content_for?(:meta_keywords)
+      yield(:meta_keywords)
+    else
+      setting["meta_keywords"].presence || ""
+    end
+
+  # Imagen social (puedes cambiarla por imagen de propuesta, etc.)
+  page_image =
+    if content_for?(:meta_image)
+      yield(:meta_image)
+    else
+      image_url("image.png")
+    end
+
+  # URL actual dinámica
+  page_url = request.original_url
+%>
+
+<title><%= page_title %></title>
+
+<meta name="description" content="<%= page_description %>" />
+<meta name="keywords"    content="<%= page_keywords %>" />
+
+<!-- Open Graph -->
+<meta property="og:title"       content="<%= page_title %>">
+<meta property="og:description" content="<%= page_description %>">
+<meta property="og:image"       content="<%= page_image %>">
+<meta property="og:url"         content="<%= page_url %>">
+<meta property="og:type"        content="website">
+<meta property="og:locale"      content="<%= I18n.locale %>">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="<%= page_title %>">
+<meta name="twitter:description" content="<%= page_description %>">
+<meta name="twitter:image"       content="<%= page_image %>">
+
